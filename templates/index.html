@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-    <title>首页 - EOMS后台管理系统模板</title>
+    <title>首页 - EOMS后台管理系统</title>
     <link rel="icon" href="/static/favicon.ico" type="image/ico">
     <meta name="keywords" content="OMS,后台管理系统">
     <meta name="description" content="基于Bootstrap v3.3.7的后台管理系统">
-    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/base/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/base/css/materialdesignicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/base/js/bootstrap-multitabs/multitabs.min.css">
     <link href="/static/base/css/style.min.css" rel="stylesheet">
+    <link href="/static/base/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -30,7 +31,7 @@
                         <li class="nav-item nav-item-has-subnav">
                             <a href="javascript:void(0)"><i class="mdi mdi-palette"></i> <span>工单管理</span></a>
                             <ul class="nav nav-subnav">
-                                <li><a class="multitabs" href="lyear_ui_buttons.html">工单列表</a></li>
+                                <li><a class="multitabs" href="{{ 'orders_view' }}">工单列表</a></li>
                             </ul>
                         </li>
                         <li class="nav-item nav-item-has-subnav">
@@ -39,6 +40,7 @@
                             <ul class="nav nav-subnav">
                                 <li><a class="multitabs" href="lyear_forms_elements.html">用户管理</a></li>
                                 <li><a class="multitabs" href="lyear_forms_radio.html">故障管理</a></li>
+                                <li><a class="multitabs" href="lyear_forms_radio.html">知识库</a></li>
                             </ul>
                         </li>
                         <li class="nav-item nav-item-has-subnav">
@@ -84,7 +86,6 @@
                                        href="javascript:void(0)"><i class="mdi mdi-account"></i> 个人信息</a></li>
                                 <li><a class="multitabs" data-url="lyear_pages_edit_pwd.html" href="javascript:void(0)"><i
                                         class="mdi mdi-lock-outline"></i> 修改密码</a></li>
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-delete"></i> 清空缓存</a></li>
                                 <li class="divider"></li>
                                 <li><a href="lyear_pages_login.html"><i class="mdi mdi-logout-variant"></i> 退出登录</a>
                                 </li>
@@ -217,11 +218,14 @@
 </div>
 
 <script type="text/javascript" src="/static/base/js/jquery.min.js"></script>
-<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/base/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/base/js/perfect-scrollbar.min.js"></script>
 <script type="text/javascript" src="/static/base/js/bootstrap-multitabs/multitabs.js"></script>
 <script type="text/javascript" src="/static/base/js/index.min.js"></script>
 <!--图表插件-->
 <script type="text/javascript" src="/static/base/js/Chart.js"></script>
+<!--BS table-->
+<script type="text/javascript" src="/static/base/js/bootstrap-table/bootstrap-table.js"></script>
+<script type="text/javascript" src="/static/base/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
 </body>
 </html>
