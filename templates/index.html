@@ -27,24 +27,35 @@
                 <nav class="sidebar-main">
                     <ul class="nav nav-drawer">
                         <li class="nav-item active"><a class="multitabs" href="{{ 'home' }}"><i
-                                class="mdi mdi-home"></i> <span>控制台</span></a></li>
+                                class="mdi mdi-home-circle"></i> <span>控制台</span></a></li>
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="mdi mdi-palette"></i> <span>工单管理</span></a>
+                            <a href="javascript:void(0)"><i
+                                    class="mdi mdi-format-list-bulleted"></i><span>工单管理</span></a>
                             <ul class="nav nav-subnav">
                                 <li><a class="multitabs" href="{{ 'orders_view' }}">工单列表</a></li>
                             </ul>
                         </li>
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="mdi mdi-format-align-justify"></i>
+                            <a href="javascript:void(0)"><i class="mdi mdi-settings-box"></i>
                                 <span>系统管理</span></a>
                             <ul class="nav nav-subnav">
-                                <li><a class="multitabs" href="lyear_forms_elements.html">用户管理</a></li>
                                 <li><a class="multitabs" href="lyear_forms_radio.html">故障管理</a></li>
+                                <li><a class="multitabs" href="lyear_forms_elements.html">客户管理</a></li>
                                 <li><a class="multitabs" href="lyear_forms_radio.html">知识库</a></li>
                             </ul>
                         </li>
                         <li class="nav-item nav-item-has-subnav">
-                            <a href="javascript:void(0)"><i class="mdi mdi-file-outline"></i> <span>个人资料</span></a>
+                            <a href="javascript:void(0)"><i class="mdi mdi-file-document"></i>
+                                <span>文章管理</span></a>
+                            <ul class="nav nav-subnav">
+                                <li><a class="multitabs" href="lyear_forms_radio.html">故障管理</a></li>
+                                <li><a class="multitabs" href="lyear_forms_elements.html">客户管理</a></li>
+                                <li><a class="multitabs" href="lyear_forms_radio.html">知识库</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item nav-item-has-subnav">
+                            <a href="javascript:void(0)"><i class="mdi mdi-account-settings-variant"></i>
+                                <span>个人资料</span></a>
                             <ul class="nav nav-subnav">
                                 <li><a class="multitabs" href="lyear_pages_doc.html">个人信息</a></li>
                             </ul>
@@ -227,5 +238,12 @@
 <!--BS table-->
 <script type="text/javascript" src="/static/base/js/bootstrap-table/bootstrap-table.js"></script>
 <script type="text/javascript" src="/static/base/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript">
+    $.ajaxSetup({
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }
+    })
+</script>
 </body>
 </html>

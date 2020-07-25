@@ -12,165 +12,42 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from oms import models
+from oms.utils.LazyEncoder import LazyEncoder
+
 
 def orders_view(request):
 	return render(request, 'order_list.html')
 
 
 def get_orders(request):
-	data = {
-		"total": 800,
-		"totalNotFiltered": 800,
-		"rows": [
-			{
-				"id": 0,
-				"name": "Item 0",
-				"price": "$0"
-			},
-			{
-				"id": 1,
-				"name": "Item 1",
-				"price": "$1"
-			},
-			{
-				"id": 2,
-				"name": "Item 2",
-				"price": "$2"
-			},
-			{
-				"id": 3,
-				"name": "Item 3",
-				"price": "$3"
-			},
-			{
-				"id": 4,
-				"name": "Item 4",
-				"price": "$4"
-			},
-			{
-				"id": 5,
-				"name": "Item 5",
-				"price": "$5"
-			},
-			{
-				"id": 6,
-				"name": "Item 6",
-				"price": "$6"
-			},
-			{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},{
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			},
-			{
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			},
-			{
-				"id": 9,
-				"name": "Item 9",
-				"price": "$9"
-			}
-		]
-	}
-	return HttpResponse(json.dumps(data))
+	data = []
+	orders = models.Order.objects.all()
+	for o in orders:
+		data.append({
+			'description': o.description,
+			'customer_name': o.customer.customer_name,
+			'operator_name': o.operator.operator_name,
+			'create_time': o.create_time,
+			'update_time': o.update_time,
+			# 'status': o.get_status_display(),
+			'status': o.status,
+		})
+	return HttpResponse(json.dumps(data, cls=LazyEncoder))
+
+
+def order_add(request):
+	description = request.POST.get('description', '')
+	customer_id = request.POST.get('customer_id', None)
+	operator_id = request.POST.get('operator_id', None)
+	result = request.POST.get('result', '')
+	dic = {
+		"description": description,
+		"customer_id": int(customer_id),  # 直接指定  外键值了，这里要加 _id
+		"operator_id": int(operator_id),
+		"result": result}
+	try:
+		models.Order.objects.create(**dic)
+	except Exception as e:
+		print(e)
+	return HttpResponse(json.dumps(200))

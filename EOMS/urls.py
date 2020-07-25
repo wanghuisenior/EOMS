@@ -23,6 +23,8 @@ urlpatterns = [
 	path('', views.index),
 	path('index', views.index),
 	path('home', views.home),
+	# order
 	path('orders_view', order_views.orders_view),
-	path('get_orders', order_views.get_orders)
+	path('get_orders', order_views.get_orders),
+	path('order_add', order_views.order_add),
 ]
