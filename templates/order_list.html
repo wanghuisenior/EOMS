@@ -12,6 +12,7 @@
         .table {
             table-layout: fixed;
         }
+
     </style>
 </head>
 
@@ -22,9 +23,28 @@
             <div class="card">
                 <div class="card-body">
                     <div id="toolbar" class="toolbar-btn-action">
-                        <button id="btn_add" type="button" class="btn btn-sm btn-primary m-r-5">
-                            <span class="mdi mdi-plus" aria-hidden="true"></span>新建工单
-                        </button>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <button id="btn_add" type="button" class="btn btn-sm btn-primary m-r-5">
+                                    <span class="mdi mdi-plus" aria-hidden="true"></span>新建工单
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-daterange input-group js-datepicker" data-auto-close="true"
+                                     data-date-format="yyyy-mm-dd">
+                                    <input class="form-control" type="text" id="date_start" name="date_start"
+                                           placeholder="开始日期" style="height: 32px">
+                                    <span class="input-group-addon">
+                                        <i class="mdi mdi-chevron-right" style="height: 32px"></i>
+                                    </span>
+                                    <input class="form-control" type="text" id="date_end" name="date_end"
+                                           placeholder="结束日期" style="height: 32px">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-sm btn-default" type="button">查询</button>
+                            </div>
+                        </form>
                     </div>
                     <table id="table_order"></table>
                 </div>
@@ -37,7 +57,7 @@
 <script type="text/javascript">
     var $table = $('#table_order');
     $table.bootstrapTable('destroy').bootstrapTable({
-        classes: 'table table-bordered table-hover table-striped',
+        classes: 'table table-sm table-bordered table-hover table-striped',
         url: 'get_orders',
         //uniqueId: 'id',
         //idField: 'id',             // 每行的唯一标识字段
@@ -49,6 +69,7 @@
         pagination: true,                    // 是否显示分页
         sortOrder: "asc",                    // 排序方式
         search: true,                      // 是否显示表格搜索，此搜索是客户端搜索
+        height: $(window).height() - 170,
         /**
          queryParams: function (params) {
             var temp = {
@@ -166,6 +187,15 @@
             console.log(res)
         });
     })
+    $(document).ready(function () {
+        setupDate();
+    })
+
+    function setupDate() {
+        $('#date_start').val(moment().subtract(1, 'months').format('YYYY-MM-DD'))
+        $("#date_end").val(moment().format('YYYY-MM-DD'))
+    }
 </script>
+<script type="text/javascript" src="/static/base/js/main.min.js"></script>
 </body>
 </html>
