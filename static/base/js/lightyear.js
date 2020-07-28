@@ -51,7 +51,7 @@ var lightyear = function(){
                 from: $from,
                 align: $align
             },
-            offset: 20,
+            offset: 30,
             spacing: 10,
             z_index: 10800,
             delay: $delay,

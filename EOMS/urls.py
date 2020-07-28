@@ -23,8 +23,10 @@ urlpatterns = [
 	path('', views.index),
 	path('index', views.index),
 	path('home', views.home),
+	path('get_home_data', views.get_home_data),
 	# order
 	path('orders_view', order_views.orders_view),
 	path('get_orders', order_views.get_orders),
 	path('order_add', order_views.order_add),
+	path('update_status', order_views.update_status),
 ]

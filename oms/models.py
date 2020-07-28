@@ -19,6 +19,9 @@ class Order(models.Model):
 	operator = models.ForeignKey('Operator', on_delete=models.CASCADE)
 	objects = models.Manager()
 
+	class Meta:
+		ordering = ["-create_time"]  # 按降序排列
+
 
 class Customer(models.Model):
 	"""

@@ -7,6 +7,7 @@
  @Date: 2020/7/22 16:50
  @Description: 工单有关的视图
 """
+import datetime
 import json
 
 from django.http import HttpResponse
@@ -22,9 +23,22 @@ def orders_view(request):
 
 def get_orders(request):
 	data = []
-	orders = models.Order.objects.all()
+	search = request.GET.get('search')
+	status = request.GET.get('status')
+	date_start_str = request.GET.get('date_start')
+	date_end_str = request.GET.get('date_end')
+	query_dict = {}
+	if date_start_str and date_end_str:
+		date_s = datetime.datetime.strptime(date_start_str, '%Y-%m-%d')
+		date_e = datetime.datetime.strptime(date_end_str, '%Y-%m-%d') + datetime.timedelta(hours=23, minutes=59,
+																						   seconds=59)
+		query_dict['create_time__range'] = [date_s, date_e]
+	if status:
+		query_dict['status'] = status
+	orders = models.Order.objects.filter(**query_dict)
 	for o in orders:
 		data.append({
+			'order_id': o.order_id,
 			'description': o.description,
 			'customer_name': o.customer.customer_name,
 			'operator_name': o.operator.operator_name,
@@ -51,3 +65,15 @@ def order_add(request):
 	except Exception as e:
 		print(e)
 	return HttpResponse(json.dumps(200))
+
+
+def update_status(request):
+	order_id = request.POST.get('order_id')
+	status = request.POST.get('status')
+	try:
+		order = models.Order.objects.get(order_id=order_id)
+		order.status = status
+		order.save()
+		return HttpResponse(json.dumps(200))
+	except Exception as e:
+		return HttpResponse(json.dumps(500))

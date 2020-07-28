@@ -7,12 +7,11 @@
     <link rel="icon" href="/static/favicon.ico" type="image/ico">
     <meta name="keywords" content="OMS,后台管理系统">
     <meta name="description" content="基于Bootstrap v3.3.7的后台管理系统">
-    <style type="text/css">
-        {# 解决列宽设置不生效 #}
-        .table {
-            table-layout: fixed;
-        }
+    <link href="/static/base/js/bootstrap-switch-3.3.4/dist/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+    <script type="text/javascript"
+            src="/static/base/js/bootstrap-switch-3.3.4/dist/js/bootstrap-switch.min.js"></script>
 
+    <style type="text/css">
     </style>
 </head>
 
@@ -42,7 +41,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button class="btn btn-sm btn-default" type="button">查询</button>
+                                <button id="btn_search" class="btn btn-sm btn-default" type="button">查询</button>
+                                <button id="btn_reset" class="btn btn-sm btn-default" type="button">重置</button>
+
+
                             </div>
                         </form>
                     </div>
@@ -55,33 +57,35 @@
 
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        setupDate();
+    })
     var $table = $('#table_order');
     $table.bootstrapTable('destroy').bootstrapTable({
         classes: 'table table-sm table-bordered table-hover table-striped',
         url: 'get_orders',
-        //uniqueId: 'id',
-        //idField: 'id',             // 每行的唯一标识字段
+        uniqueId: 'order_id',
+        //idField: 'order_id',             // 每行的唯一标识字段
         toolbar: '#toolbar',       // 工具按钮容器
         clickToSelect: true,     // 是否启用点击选中行
         showColumns: true,         // 是否显示所有的列
-        showRefresh: true,         // 是否显示刷新按钮
+        //showRefresh: true,         // 是否显示刷新按钮
         //showToggle: true,        // 是否显示详细视图和列表视图的切换按钮(clickToSelect同时设置为true时点击会报错)
         pagination: true,                    // 是否显示分页
-        sortOrder: "asc",                    // 排序方式
+        //sortOrder: "asc",                    // 排序方式
         search: true,                      // 是否显示表格搜索，此搜索是客户端搜索
         height: $(window).height() - 170,
-        /**
-         queryParams: function (params) {
-            var temp = {
-                limit: params.limit,         // 每页数据量
-                offset: params.offset,       // sql语句起始索引
-                page: (params.offset / params.limit) + 1,
-                sort: params.sort,           // 排序的列名
-                sortOrder: params.order      // 排序方式'asc' 'desc'
+        queryParams: function (params) {
+            return {
+                'date_start': $('#date_start').val(),
+                'date_end': $('#date_end').val(),
+                //limit: params.limit,         // 每页数据量
+                //offset: params.offset,       // sql语句起始索引
+                //page: (params.offset / params.limit) + 1,
+                //sort: params.sort,           // 排序的列名
+                //sortOrder: params.order      // 排序方式'asc' 'desc'
             };
-            return temp;
         },
-         */
         //sidePagination: "server",            // 分页方式：client客户端分页，server服务端分页
         //pageNumber: 1,                       // 初始化加载第一页，默认第一页
         //pageSize: 10,                        // 每页的记录行数
@@ -106,7 +110,8 @@
                 valign: 'middle',
                 formatter: function (value, row, index) {
                     var options = $table.bootstrapTable('getOptions');
-                    return options.pageSize * (options.pageNumber - 1) + index + 1;
+                    //return options.pageSize * (options.pageNumber - 1) + index + 1;
+                    return index + 1;
                 }
             }, {
                 field: 'customer_name',
@@ -117,7 +122,6 @@
             }, {
                 field: 'description',
                 title: '问题描述',
-                align: 'center',
                 valign: 'middle',
             }, {
                 field: 'operator_name',
@@ -141,12 +145,15 @@
                 valign: 'middle',
             }, {
                 field: 'status',
-                title: '状态',
-                width: 80,
+                title: '是否完成',
+                width: 100,
                 align: 'center',
                 valign: 'middle',
+                sortable: true,
                 formatter: function (value, row, index) {
-                    return value
+                    var is_checked = value > 0 ? 'checked="checked"' : '';
+                    //return '<label class="lyear-switch switch-solid switch-success lyear-status"><input type="checkbox" ' + is_checked + '><span onClick="update_status(' + row.order_id + ', ' + value + ')"></span></label>';
+                    return value;
                 }
             }, {
                 field: 'operate',
@@ -172,10 +179,19 @@
                     }
                 }
             }],
+        onRefresh: function (data) {
+
+        },
         onLoadSuccess: function (data) {
-            $("[data-toggle='tooltip']").tooltip();
+            //layer.msg('成功', {icon: 1, time: 800});
+
+
+        },
+        onLoadError: function (data) {
+
         }
     });
+
     $('#btn_add').click(function () {
         //新建工单
         $.post('order_add', {
@@ -187,9 +203,22 @@
             console.log(res)
         });
     })
-    $(document).ready(function () {
+    $('#btn_search').click(function () {
+        $table.bootstrapTable('refresh');
+    })
+    $('#btn_reset').click(function () {
         setupDate();
     })
+
+    function update_status(order_id, status) {
+        $.post('update_status', {'order_id': order_id, 'status': (status > 0) ? 0 : 1}, function (res) {
+            if (res == 200) {
+                layer.msg('状态更新成功', {offset: ['290px', ''], time: 800});
+            } else layer.msg('失败', function () {
+            });
+            $table.bootstrapTable('refresh');
+        })
+    }
 
     function setupDate() {
         $('#date_start').val(moment().subtract(1, 'months').format('YYYY-MM-DD'))
@@ -197,5 +226,6 @@
     }
 </script>
 <script type="text/javascript" src="/static/base/js/main.min.js"></script>
+
 </body>
 </html>
