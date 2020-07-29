@@ -153,7 +153,12 @@
                 formatter: function (value, row, index) {
                     var is_checked = value > 0 ? 'checked="checked"' : '';
                     //return '<label class="lyear-switch switch-solid switch-success lyear-status"><input type="checkbox" ' + is_checked + '><span onClick="update_status(' + row.order_id + ', ' + value + ')"></span></label>';
-                    return value;
+                    //return value;
+                    if (value > 0) {
+                        return '<button type="button" class="btn btn-xs btn-round btn-success" onclick="update_status(' + row.order_id + ',' + value + ')">已完成</button>';
+                    } else {
+                        return '<button type="button" class="btn btn-xs btn-round btn-danger" onclick="update_status(' + row.order_id + ',' + value + ')">未处理</button>';
+                    }
                 }
             }, {
                 field: 'operate',
@@ -210,8 +215,8 @@
         setupDate();
     })
 
-    function update_status(order_id, status) {
-        $.post('update_status', {'order_id': order_id, 'status': (status > 0) ? 0 : 1}, function (res) {
+    function update_status(order_id, value) {
+        $.post('update_status', {'order_id': order_id, 'status': (value > 0) ? 0 : 1}, function (res) {
             if (res == 200) {
                 layer.msg('状态更新成功', {offset: ['290px', ''], time: 800});
             } else layer.msg('失败', function () {

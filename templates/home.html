@@ -111,7 +111,7 @@
         pagination: true,                    // 是否显示分页
         pageSize: 5,                        // 每页的记录行数
         pageList: [5],         // 可供选择的每页的行数
-        height: 320,
+        height: 300,
         queryParams: function (params) {
             return {
                 // 'status': 0,
@@ -183,7 +183,7 @@
 
         }
         var $dashChartBarsData = {
-            labels: labels.reverse(),
+            labels: labels,
             datasets: [
                 {
                     label: '工单数量',
@@ -192,7 +192,7 @@
                     backgroundColor: 'rgba(51,71,202,0.5)',
                     hoverBackgroundColor: "rgba(51,71,202,0.7)",
                     hoverBorderColor: "rgba(0,0,0,0)",
-                    data: data.reverse()
+                    data: data
                 },
                 /**
                  {

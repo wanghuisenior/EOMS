@@ -22,7 +22,7 @@ def get_home_data(request):
 	today = datetime.date.today()
 	ret = {
 		'sum': len(orders),
-		'seven_day': {},
+		'seven_day': {'周一': 0, '周二': 0, '周三': 0, '周四': 0, '周五': 0, '周六': 0, '周日': 0, '昨日': 0, '今日': 0},
 		'today': len(
 			orders.filter(create_time__year=today.year, create_time__month=today.month, create_time__day=today.day)),
 		'untreated': []}
@@ -37,20 +37,24 @@ def get_home_data(request):
 	# 最近7天数据
 	yesterday = today - datetime.timedelta(1)
 	for order in orders.filter(create_time__gte=today - datetime.timedelta(6)):
-		wd = order.create_time.isoweekday()
-		d = '昨日' if order.create_time.date() == yesterday \
-			else '今日' if order.create_time.date() == today \
-			else '周日' if wd == 7 \
-			else '周六' if wd == 6 \
-			else '周五' if wd == 5 \
-			else '周四' if wd == 4 \
-			else '周三' if wd == 3 \
-			else '周二' if wd == 2 \
-			else '周一' if wd == 1 \
-			else '未知'
-		if d in ret['seven_day'].keys():
-			ret['seven_day'][d] += 1
-		else:
-			ret['seven_day'][d] = 1
-	print(ret['seven_day'])
+		weekday_index = order.create_time.isoweekday()
+		order_create_date = order.create_time.date()
+		if order_create_date == yesterday:
+			ret['seven_day']['昨日'] += 1
+		elif order_create_date == today:
+			ret['seven_day']['今日'] += 1
+		elif weekday_index == 7:
+			ret['seven_day']['周日'] += 1
+		elif weekday_index == 6:
+			ret['seven_day']['周六'] += 1
+		elif weekday_index == 5:
+			ret['seven_day']['周五'] += 1
+		elif weekday_index == 4:
+			ret['seven_day']['周四'] += 1
+		elif weekday_index == 3:
+			ret['seven_day']['周三'] += 1
+		elif weekday_index == 2:
+			ret['seven_day']['周二'] += 1
+		elif weekday_index == 1:
+			ret['seven_day']['周一'] += 1
 	return HttpResponse(json.dumps(ret, cls=LazyEncoder))
