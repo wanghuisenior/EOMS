@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title>NProgress: slim progress bars in JavaScript</title>
+  <link href='support/style.css' rel='stylesheet' />
+  <link href='nprogress.css' rel='stylesheet' />
+
+  <meta name="viewport" content="width=device-width">
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700,400italic' rel='stylesheet' type='text/css'>
+  
+  <script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.js"></script>
+  <script src='nprogress.js'></script>
+
+</head>
+
+<body>
+  <header class='page-header'>
+    <span class='nprogress-logo fade out'></span>
+    <h1>NProgress<i>.js</i></h1>
+    <p class='fade out brief big'>一个纳米级的进度条，非常好用</p>
+  </header>
+  <div class='contents fade out'>
+    <div class='controls'>
+      <p>
+        <button class='button play' id='b-0'></button>
+        <i>NProgress</i><b>.start()</b>
+        &mdash;
+        显示进度条
+      </p>
+      <p>
+        <button class='button play' id='b-40'></button>
+        <i>NProgress</i><b>.set(0.4)</b>
+        &mdash;
+        设置显示一个百分比
+      </p>
+      <p>
+        <button class='button play' id='b-inc'></button>
+        <i>NProgress</i><b>.inc()</b>
+        &mdash;
+        往前加载一丢丢
+      </p>
+      <p>
+        <button class='button play' id='b-100'></button>
+        <i>NProgress</i><b>.done()</b>
+        &mdash;
+        完成进度
+      </p>
+    </div>
+    <div class='actions'>
+      <a href='https://github.com/rstacruz/nprogress' target="_blank" class='button primary big'>
+        Download
+        v<span class='version'></span>
+      </a>
+      <p class='brief'>与Ajax等实现完美结合.</p>
+    </div>
+    <div class='hr-rule'></div>
+  </div>
+
+  <script>
+    $('body').show();
+    $('.version').text(NProgress.version);
+    NProgress.start();
+    setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);
+
+    $("#b-0").click(function() { NProgress.start(); });
+    $("#b-40").click(function() { NProgress.set(0.4); });
+    $("#b-inc").click(function() { NProgress.inc(); });
+    $("#b-100").click(function() { NProgress.done(); });
+  </script>
+</body>
+</html>

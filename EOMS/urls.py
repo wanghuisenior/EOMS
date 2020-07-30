@@ -16,7 +16,7 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path
 
-from oms import order_views, views
+from oms import views, order_views, question_views, customer_views, operator_views
 
 urlpatterns = [
 	#    path('admin/', admin.site.urls),
@@ -24,9 +24,25 @@ urlpatterns = [
 	path('index', views.index),
 	path('home', views.home),
 	path('get_home_data', views.get_home_data),
+
 	# order
-	path('orders_view', order_views.orders_view),
-	path('get_orders', order_views.get_orders),
+	path('order_view', order_views.order_view),
+	path('order_list', order_views.order_list),
 	path('order_add', order_views.order_add),
 	path('update_status', order_views.update_status),
+
+	# 故障管理
+	path('question_view', question_views.question_view),
+	path('question_list', question_views.question_list),
+	path('question_add', question_views.question_add),
+
+	# 客户管理
+	path('customer_view', customer_views.customer_view),
+	path('customer_list', customer_views.customer_list),
+	path('customer_add', customer_views.customer_add),
+
+	# 维修工管理
+	path('operator_view', operator_views.operator_view),
+	path('operator_list', operator_views.operator_list),
+	path('operator_add', operator_views.operator_add),
 ]

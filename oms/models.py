@@ -17,6 +17,8 @@ class Order(models.Model):
 	customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
 	# 工单和维修工--多对一  （一个维修工对应多个工单， 一个工单目前对应一个维修工）
 	operator = models.ForeignKey('Operator', on_delete=models.CASCADE)
+	# 工单和故障  多对多关系
+	question = models.ManyToManyField('Question')
 	objects = models.Manager()
 
 	class Meta:
@@ -29,6 +31,16 @@ class Customer(models.Model):
 	"""
 	customer_id = models.AutoField(primary_key=True)
 	customer_name = models.CharField(max_length=200)
+	objects = models.Manager()
+
+
+class Question(models.Model):
+	"""
+	故障
+	"""
+	question_id = models.AutoField(primary_key=True)
+	question_type = models.CharField(max_length=200)
+	question_name = models.CharField(max_length=500)
 	objects = models.Manager()
 
 

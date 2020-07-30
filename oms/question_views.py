@@ -16,27 +16,31 @@ from oms import models
 from oms.utils.LazyEncoder import LazyEncoder
 
 
-def customer_view(request):
-	return render(request, 'customer_list.html')
+def question_view(request):
+	return render(request, 'question_list.html')
 
 
-def customer_list(request):
+def question_list(request):
 	data = []
-	questions = models.Customer.objects.all()
+	questions = models.Question.objects.all()
 	for q in questions:
 		data.append({
-			'customer_id': q.customer_id,
-			'customer_name': q.customer_name,
+			'question_id': q.question_id,
+			'question_type': q.question_type,
+			'question_name': q.question_name,
 		})
+	print(data)
 	return HttpResponse(json.dumps(data, cls=LazyEncoder))
 
 
-def customer_add(request):
-	customer_name = request.POST.get('customer_name')
+def question_add(request):
+	question_type = request.POST.get('question_type')
+	question_name = request.POST.get('question_name')
 	dic = {
-		"customer_name": customer_name}
+		"question_type": question_type,
+		"question_name": question_name}
 	try:
-		models.Customer.objects.create(**dic)
+		models.Question.objects.create(**dic)
 	except Exception as e:
 		print(e)
 	return HttpResponse(json.dumps(200))

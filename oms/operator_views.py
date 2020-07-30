@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
- @FileName: question_views.py
+ @FileName: operator_views.py
  @Author: 王辉/Administrator
  @Email: wanghui@zih718.com
- @Date: 2020/7/29 11:09
+ @Date: 2020/7/29 14:43
  @Description:
 """
+
 import json
 
 from django.http import HttpResponse
@@ -16,27 +17,28 @@ from oms import models
 from oms.utils.LazyEncoder import LazyEncoder
 
 
-def customer_view(request):
-	return render(request, 'customer_list.html')
+def operator_view(request):
+	return render(request, 'operator_list.html')
 
 
-def customer_list(request):
+def operator_list(request):
 	data = []
-	questions = models.Customer.objects.all()
-	for q in questions:
+	operators = models.Operator.objects.all()
+	for o in operators:
 		data.append({
-			'customer_id': q.customer_id,
-			'customer_name': q.customer_name,
+			'operator_id': o.operator_id,
+			'operator_name': o.operator_name,
 		})
+	print(data)
 	return HttpResponse(json.dumps(data, cls=LazyEncoder))
 
 
-def customer_add(request):
-	customer_name = request.POST.get('customer_name')
+def operator_add(request):
+	operator_name = request.POST.get('operator_name')
 	dic = {
-		"customer_name": customer_name}
+		"operator_name": operator_name}
 	try:
-		models.Customer.objects.create(**dic)
+		models.Operator.objects.create(**dic)
 	except Exception as e:
 		print(e)
 	return HttpResponse(json.dumps(200))

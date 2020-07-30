@@ -55,7 +55,7 @@
                 <div class="card-body clearfix">
                     <div class="pull-right">
                         <p class="h6 text-white m-t-0">新增留言</p>
-                        <p class="h3 text-white m-b-0"><span id="num4">10</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <p class="h3 text-white m-b-0"><span id="num4">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
                     <div class="pull-left"><span class="img-avatar img-avatar-48 bg-translucent"><i
                             class="mdi mdi-comment-outline fa-1-5x"></i></span></div>
@@ -104,14 +104,16 @@
 
 
 <script type="text/javascript">
+    //NProgress.configure({ showSpinner: false });
+    NProgress.start();
     var $table_untreated = $('#table_untreated');
     $table_untreated.bootstrapTable('destroy').bootstrapTable({
         classes: 'table table-sm table-bordered table-hover table-striped',
         url: 'get_home_data',
         pagination: true,                    // 是否显示分页
-        pageSize: 5,                        // 每页的记录行数
-        pageList: [5],         // 可供选择的每页的行数
-        height: 300,
+        pageSize: 10,                        // 每页的记录行数
+        //pageList: [5],         // 可供选择的每页的行数
+        height: $(window).height() - 300,
         queryParams: function (params) {
             return {
                 // 'status': 0,
@@ -127,7 +129,7 @@
                 align: 'center',
                 valign: 'middle',
                 formatter: function (value, row, index) {
-                    var options = $table_untreated.bootstrapTable('getOptions');
+                    //var options = $table_untreated.bootstrapTable('getOptions');
                     //return options.pageSize * (options.pageNumber - 1) + index + 1;
                     return index + 1;
                 }
@@ -169,6 +171,9 @@
             document.getElementById("num3").innerHTML = res['sum'];
             initChart(res['seven_day']);
             return res['untreated'];
+        },
+        onLoadSuccess:function (res) {
+            NProgress.done();
         }
     });
 

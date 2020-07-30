@@ -2347,7 +2347,7 @@ dd, dt {
     padding: 0px 15px!important;
 }
 .p-t-15 {
-    padding-top: 8px!important;
+    padding-top: 10px!important;
 }
 .p-r-15 {
     padding-right: 15px!important;
@@ -2930,7 +2930,7 @@ dd, dt {
     clear: both;
 }
 .card-body {
-    padding: 10px 20px;
+    padding: 20px 20px;
 }
 .card-header .h4,
 .card-header h4 {

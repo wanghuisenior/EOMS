@@ -17,10 +17,11 @@
     <!--日期选择插件-->
     <link rel="stylesheet" href="/static/base/js/bootstrap-datepicker/bootstrap-datepicker3.min.css">
     <link rel="stylesheet" href="/static/layer-v3.1.1/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="/static/nprogress-master/nprogress.css">
 </head>
 
 <body>
-<div class="lyear-layout-web">
+<div class="lyear-layout-web" id="main">
     <div class="lyear-layout-container">
         <!--左侧导航-->
         <aside class="lyear-layout-sidebar">
@@ -37,17 +38,17 @@
                             <a href="javascript:void(0)"><i
                                     class="mdi mdi-format-list-bulleted"></i><span>工单管理</span></a>
                             <ul class="nav nav-subnav">
-                                <li><a class="multitabs" href="{{ 'orders_view' }}">工单列表</a></li>
+                                <li><a class="multitabs" href="{{ 'order_view' }}">工单列表</a></li>
                             </ul>
                         </li>
                         <li class="nav-item nav-item-has-subnav">
                             <a href="javascript:void(0)"><i class="mdi mdi-settings-box"></i>
                                 <span>系统管理</span></a>
                             <ul class="nav nav-subnav">
-                                <li><a class="multitabs" href="lyear_forms_radio.html">故障管理</a></li>
-                                <li><a class="multitabs" href="lyear_forms_elements.html">客户管理</a></li>
-                                <li><a class="multitabs" href="lyear_forms_radio.html">维修工</a></li>
-                                <li><a class="multitabs" href="lyear_forms_radio.html">知识库</a></li>
+                                <li><a class="multitabs" href="{{ 'question_view' }}">故障管理</a></li>
+                                <li><a class="multitabs" href="{{ 'customer_view' }}">客户管理</a></li>
+                                <li><a class="multitabs" href="{{ 'operator_view' }}">维修工</a></li>
+                                <li><a class="multitabs" href="{{ 'knowledge_view' }}">知识库</a></li>
                             </ul>
                         </li>
                         <li class="nav-item nav-item-has-subnav">
@@ -251,7 +252,10 @@
 <script src="/static/base/js/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
 <script src="/static/base/js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 <script src="/static/layer-v3.1.1/layer/layer.js"></script>
-
+<script type="text/javascript"
+        src="/static/base/js/bootstrap-table/extensions/export/bootstrap-table-export.min.js"></script>
+<script type="text/javascript" src="/static/base/js/bootstrap-table/extensions/export/tableExport.min.js"></script>
+<script type="text/javascript" src="/static/nprogress-master/nprogress.js"></script>
 <script type="text/javascript">
     $.ajaxSetup({
         data: {

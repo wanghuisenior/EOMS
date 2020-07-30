@@ -17,11 +17,11 @@ from oms import models
 from oms.utils.LazyEncoder import LazyEncoder
 
 
-def orders_view(request):
+def order_view(request):
 	return render(request, 'order_list.html')
 
 
-def get_orders(request):
+def order_list(request):
 	data = []
 	search = request.GET.get('search')
 	status = request.GET.get('status')
