@@ -42,3 +42,12 @@ def operator_add(request):
 	except Exception as e:
 		print(e)
 	return HttpResponse(json.dumps(200))
+
+
+def operator_del(request):
+	operator_id = request.GET.get('operator_id')
+	try:
+		models.Operator.objects.get(operator_id=operator_id).delete()
+		return HttpResponse(json.dumps(200))
+	except Exception as e:
+		return HttpResponse(json.dumps(500))

@@ -40,3 +40,12 @@ def customer_add(request):
 	except Exception as e:
 		print(e)
 	return HttpResponse(json.dumps(200))
+
+
+def customer_del(request):
+	customer_id = request.GET.get('customer_id')
+	try:
+		models.Customer.objects.get(customer_id=customer_id).delete()
+		return HttpResponse(json.dumps(200))
+	except Exception as e:
+		return HttpResponse(json.dumps(500))

@@ -239,8 +239,7 @@
 <script type="text/javascript" src="/static/base/js/perfect-scrollbar.min.js"></script>
 <script type="text/javascript" src="/static/base/js/bootstrap-multitabs/multitabs.js"></script>
 <script type="text/javascript" src="/static/base/js/index.min.js"></script>
-<!--图表插件-->
-<script type="text/javascript" src="/static/base/js/Chart.js"></script>
+
 <!--BS table-->
 <script type="text/javascript" src="/static/base/js/bootstrap-table/bootstrap-table.js"></script>
 <script type="text/javascript" src="/static/base/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
@@ -262,6 +261,7 @@
             csrfmiddlewaretoken: '{{ csrf_token }}'
         }
     })
+    var tableHeight = $(window).height() - 190;
 </script>
 </body>
 </html>

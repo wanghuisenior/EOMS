@@ -29,20 +29,25 @@ urlpatterns = [
 	path('order_view', order_views.order_view),
 	path('order_list', order_views.order_list),
 	path('order_add', order_views.order_add),
+	path('order_del', order_views.order_del),
 	path('update_status', order_views.update_status),
+	path('getTypeaheadData', order_views.getTypeaheadData),
 
 	# 故障管理
 	path('question_view', question_views.question_view),
 	path('question_list', question_views.question_list),
 	path('question_add', question_views.question_add),
+	path('question_del', question_views.question_del),
 
 	# 客户管理
 	path('customer_view', customer_views.customer_view),
 	path('customer_list', customer_views.customer_list),
 	path('customer_add', customer_views.customer_add),
+	path('customer_del', customer_views.customer_del),
 
 	# 维修工管理
 	path('operator_view', operator_views.operator_view),
 	path('operator_list', operator_views.operator_list),
 	path('operator_add', operator_views.operator_add),
+	path('operator_del', operator_views.operator_del),
 ]

@@ -67,6 +67,15 @@ def order_add(request):
 	return HttpResponse(json.dumps(200))
 
 
+def order_del(request):
+	order_id = request.GET.get('order_id')
+	try:
+		models.Order.objects.get(order_id=order_id).delete()
+		return HttpResponse(json.dumps(200))
+	except Exception as e:
+		return HttpResponse(json.dumps(500))
+
+
 def update_status(request):
 	order_id = request.POST.get('order_id')
 	status = request.POST.get('status')
@@ -77,3 +86,12 @@ def update_status(request):
 		return HttpResponse(json.dumps(200))
 	except Exception as e:
 		return HttpResponse(json.dumps(500))
+
+
+def getTypeaheadData(request):
+	keyword = request.GET.get('keyword')
+	queryset = models.Customer.objects.filter(customer_name__contains=keyword)
+	ret = []
+	for q in queryset:
+		ret.append({'customer_id': q.customer_id, 'customer_name': q.customer_name})
+	return HttpResponse(json.dumps(ret))

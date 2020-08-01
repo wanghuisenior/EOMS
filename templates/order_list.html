@@ -7,10 +7,37 @@
     <link rel="icon" href="/static/favicon.ico" type="image/ico">
     <meta name="keywords" content="OMS,后台管理系统">
     <meta name="description" content="基于Bootstrap v3.3.7的后台管理系统">
+    <script type="text/javascript" src="/static/Bootstrap-3-Typeahead-master/bootstrap3-typeahead.js"></script>
 </head>
 
 <body>
 <div class="container-fluid p-t-15">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="input-group m-b-10">
+                    <span class="input-group-addon">客户名称</span>
+                    <input type="text" class="form-control" id="order_add_customer" data-provide="typeahead"
+                           autocomplete="off" placeholder="请输入关键字" aria-label="">
+                </div>
+                <div class="input-group m-b-10">
+                    <span class="input-group-addon">问题类别</span>
+                    <input type="text" class="form-control" id="order_add_qtype" placeholder="故障分类" aria-label="">
+                </div>
+                <div class="input-group m-b-10">
+                    <span class="input-group-addon">问题描述</span>
+                    <textarea class="form-control" id="order_add_qdesc" name="input_question_desc" rows="2"
+                              placeholder="请输入故障具体描述.." aria-label=""></textarea>
+                </div>
+                <div class="input-group m-b-10">
+                    <span class="input-group-addon">维修人员</span>
+                    <input type="text" class="form-control" id="order_add_operator" placeholder="请输入关键字" aria-label="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -68,7 +95,7 @@
         pagination: true,                    // 是否显示分页
         //sortOrder: "asc",                    // 排序方式
         search: true,                      // 是否显示表格搜索，此搜索是客户端搜索
-        height: $(window).height() - 190,
+        height: tableHeight,
         queryParams: function (params) {
             return {
                 'date_start': $('#date_start').val(),
@@ -168,14 +195,29 @@
                 },  // 自定义方法
                 events: {
                     'click .edit-btn': function (event, value, row, index) {
-                        editUser(row.id);
-                    },
-                    'click .del-btn': function (event, value, row, index) {
-                        delUser(row.id);
+                        layer.msg('更新' + row.order_id);
                     },
                     'click .show-btn': function (event, value, row, index) {
-                        showUser(row);
-                    }
+                        layer.msg('查看' + row);
+                    },
+                    'click .del-btn': function (event, value, row, index) {
+                        //layer.msg('删除' + row.order_id);
+                        //采用layer的确认弹框
+                        var _cur_lock_ = false;
+                        layer.confirm('确定删除吗？', function (index) {
+                            if (!_cur_lock_) {
+                                _cur_lock_ = true;
+                            } else {
+                                return false;
+                            }
+                            $.getJSON('order_del', {'order_id': row.order_id}, function (res) {
+                                if (res == '200') {
+                                    layer.msg('删除成功', {icon: 1});
+                                    //$table_order.bootstrapTable('refresh');
+                                } else layer.msg('删除失败', {icon: 2});
+                            })
+                        });
+                    },
                 }
             }],
         onRefresh: function (data) {
@@ -192,17 +234,39 @@
     });
 
     $('#btn_add_order').click(function () {
-        //新建工单
-        var totalRows = $table_order.bootstrapTable('getOptions')['totalRows'] + 1;
+        console.log('btn_add_order')
+        var index = layer.open({
+            //type: 1,//Page层类型
+            area: [$(window).width() * 0.4 + 'px', $(window).height() * 0.7 + 'px'],
+            title: '新建工单',
+            //shade: 0,//遮罩透明度
+            //fixed: false,    //取消固定定位，因为固定定位是相对body的
+            //offset: [h],
+            //maxmin: true, //允许全屏最小化
+            //anim: -1,//0-6的动画形式，-1不开启
+            content: '',
+            //content: $('#test'),
+            yes: function (index, layero) {
+                //do something
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.msg('icon = 16', {icon: 16});
 
-        $.post('order_add', {
-            'description': '我是一个新工单'+totalRows,
+            }
+        });
+        //新建工单
+        /**
+         *
+
+         var totalRows = $table_order.bootstrapTable('getOptions')['totalRows'] + 1;
+         $.post('order_add', {
+            'description': '我是一个新工单' + totalRows,
             'customer_id': '1',
             'operator_id': '1',
             'result': '已处理',
         }, function (res) {
             $table_order.bootstrapTable('refresh');
         });
+         */
     })
     $('#btn_search').click(function () {
         $table_order.bootstrapTable('refresh');
@@ -221,12 +285,50 @@
         })
     }
 
+    function getDataList(id, value) {
+        console.log('aa')
+        console.log(id, value)
+    }
+
     function setupDate() {
         $('#date_start').val(moment().subtract(1, 'months').format('YYYY-MM-DD'))
         $("#date_end").val(moment().format('YYYY-MM-DD'))
     }
-</script>
-<script type="text/javascript" src="/static/base/js/main.min.js"></script>
 
+    var customer_name2id = {};
+    $(document).ready(function () {
+        var dataSource = ['军工', '高校', '煤化工', '新能源', '节能环保', 'AB股', 'AH股', 'HS300'];
+        $("#order_add_customer").typeahead({
+            //source: dataSource, // 数据源
+            items: 5,//最多显示个数，非必须
+            updater: function (item) {//非必须
+                return item;//这里一定要return，否则选中不显示，外加调用display的时候null reference错误。
+            },
+            displayText: function (item) {
+                //return "选：" + item;//返回字符串,非必须
+                return item;//返回字符串,非必须
+            },
+            delay: 300,//延迟时间，非必须
+            source: function (query, process) { //query是输入框输入的文本内容, process是一个回调函数
+                $.getJSON("getTypeaheadData", {'keyword': query}, function (data) {
+                    var arr = [];
+                    for (let i = 0; i < data.length; i++) {
+                        customer_name2id[data[i].customer_name] = data[i].customer_id;
+                        arr.push(data[i].customer_name)
+                    }
+                    process(arr);
+                });
+            },
+            afterSelect: function (item) {       //选择项之后的事件，item是当前选中的选项
+                //$("#hidden").val(objects[item]); //为隐藏输入框赋值
+                console.log(item,customer_name2id[item])
+                //var val = $("#order_add_customer").typeahead("getActive");//获取该值
+                //console.log(val);
+            },
+        });
+    });
+</script>
+{#日期控件初始化#}
+<script type="text/javascript" src="/static/base/js/main.min.js"></script>
 </body>
 </html>
