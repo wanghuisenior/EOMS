@@ -52,19 +52,23 @@ def order_list(request):
 
 def order_add(request):
 	description = request.POST.get('description', '')
+	question_id = request.POST.get('question_id', None)
 	customer_id = request.POST.get('customer_id', None)
 	operator_id = request.POST.get('operator_id', None)
-	result = request.POST.get('result', '')
-	dic = {
-		"description": description,
-		"customer_id": int(customer_id),  # 直接指定  外键值了，这里要加 _id
-		"operator_id": int(operator_id),
-		"result": result}
 	try:
-		models.Order.objects.create(**dic)
+		dic = {
+			"description": description,
+			"customer_id": int(customer_id),  # 直接指定  外键值了，这里要加 _id
+			"operator_id": int(operator_id),
+			# "question": int(question_type),#多对多关系不能create，必须用add
+		}
+		order = models.Order.objects.create(**dic)
+		order.question.add(models.Question.objects.get(question_id=int(question_id)))
+		order.save()
+		return HttpResponse(json.dumps(200))
 	except Exception as e:
 		print(e)
-	return HttpResponse(json.dumps(200))
+		return HttpResponse(json.dumps(500))
 
 
 def order_del(request):
@@ -90,8 +94,18 @@ def update_status(request):
 
 def getTypeaheadData(request):
 	keyword = request.GET.get('keyword')
-	queryset = models.Customer.objects.filter(customer_name__contains=keyword)
+	type = request.GET.get('type')
 	ret = []
-	for q in queryset:
-		ret.append({'customer_id': q.customer_id, 'customer_name': q.customer_name})
+	if type == 'customer':
+		queryset = models.Customer.objects.filter(customer_name__contains=keyword)
+		for q in queryset:
+			ret.append({'customer_id': q.customer_id, 'customer_name': q.customer_name})
+	elif type == 'question':
+		queryset = models.Question.objects.filter(question_type__contains=keyword)
+		for q in queryset:
+			ret.append({'question_id': q.question_id, 'question_type': q.question_type})
+	elif type == 'operator':
+		queryset = models.Operator.objects.filter(operator_name__contains=keyword)
+		for q in queryset:
+			ret.append({'operator_id': q.operator_id, 'operator_name': q.operator_name})
 	return HttpResponse(json.dumps(ret))

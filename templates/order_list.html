@@ -12,30 +12,6 @@
 
 <body>
 <div class="container-fluid p-t-15">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="input-group m-b-10">
-                    <span class="input-group-addon">客户名称</span>
-                    <input type="text" class="form-control" id="order_add_customer" data-provide="typeahead"
-                           autocomplete="off" placeholder="请输入关键字" aria-label="">
-                </div>
-                <div class="input-group m-b-10">
-                    <span class="input-group-addon">问题类别</span>
-                    <input type="text" class="form-control" id="order_add_qtype" placeholder="故障分类" aria-label="">
-                </div>
-                <div class="input-group m-b-10">
-                    <span class="input-group-addon">问题描述</span>
-                    <textarea class="form-control" id="order_add_qdesc" name="input_question_desc" rows="2"
-                              placeholder="请输入故障具体描述.." aria-label=""></textarea>
-                </div>
-                <div class="input-group m-b-10">
-                    <span class="input-group-addon">维修人员</span>
-                    <input type="text" class="form-control" id="order_add_operator" placeholder="请输入关键字" aria-label="">
-                </div>
-            </div>
-        </div>
-    </div>
 
 
     <div class="row">
@@ -232,7 +208,9 @@
 
         }
     });
-
+    var customer_name2id = {};
+    var question_type2id = {};
+    var operator_name2id = {};
     $('#btn_add_order').click(function () {
         console.log('btn_add_order')
         var index = layer.open({
@@ -244,29 +222,139 @@
             //offset: [h],
             //maxmin: true, //允许全屏最小化
             //anim: -1,//0-6的动画形式，-1不开启
-            content: '',
-            //content: $('#test'),
+            content: '<div class="col-md-12" id="panel">\n' +
+                '    <div class="card">\n' +
+                '        <div class="card-body">\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">客户名称</span>\n' +
+                '                <input type="text" class="form-control" id="order_add_customer" data-provide="typeahead"\n' +
+                '                       autocomplete="off" placeholder="请输入关键字" aria-label="">\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">问题类别</span>\n' +
+                '                <input type="text" class="form-control" id="order_add_qtype" data-provide="typeahead"\n' +
+                '                       autocomplete="off" placeholder="故障分类" aria-label="">\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">问题描述</span>\n' +
+                '                <textarea class="form-control" id="order_add_qdesc" name="input_question_desc" rows="2"\n' +
+                '                          placeholder="请输入故障具体描述.." aria-label=""></textarea>\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">维修人员</span>\n' +
+                '                <input type="text" class="form-control" id="order_add_operator" data-provide="typeahead"\n' +
+                '                       autocomplete="off" placeholder="请输入关键字" aria-label="">\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</div>\n',
+            //content: $('#panel'),
+
             yes: function (index, layero) {
                 //do something
                 layer.close(index); //如果设定了yes回调，需进行手工关闭
-                layer.msg('icon = 16', {icon: 16});
-
+                layer.msg('请稍等...', {icon: 16});
+                var cname = $("#order_add_customer").typeahead("getActive");//获取该值
+                var oname = $("#order_add_operator").typeahead("getActive");//获取该值
+                var qtype = $("#order_add_qtype").typeahead("getActive");//获取该值
+                $.post('order_add', {
+                    'question_id': question_type2id[qtype],
+                    'description': $('#order_add_qdesc').val(),
+                    'customer_id': customer_name2id[cname],
+                    'operator_id': operator_name2id[oname],
+                }, function (res) {
+                    layer.closeAll();
+                    if (res == 200) {
+                        layer.msg('成功!', {icon: 6, time: 600});
+                        $table_order.bootstrapTable('refresh');
+                    } else layer.msg('失败!请确认参数是否有误', {icon: 5});
+                });
             }
         });
-        //新建工单
-        /**
-         *
-
-         var totalRows = $table_order.bootstrapTable('getOptions')['totalRows'] + 1;
-         $.post('order_add', {
-            'description': '我是一个新工单' + totalRows,
-            'customer_id': '1',
-            'operator_id': '1',
-            'result': '已处理',
-        }, function (res) {
-            $table_order.bootstrapTable('refresh');
+        $("#order_add_customer").typeahead({
+            //source: dataSource, // 数据源
+            items: 5,//最多显示个数，非必须
+            updater: function (item) {//非必须
+                return item;//这里一定要return，否则选中不显示，外加调用display的时候null reference错误。
+            },
+            displayText: function (item) {
+                //return "选：" + item;//返回字符串,非必须
+                return item;//返回字符串,非必须
+            },
+            delay: 300,//延迟时间，非必须
+            source: function (query, process) { //query是输入框输入的文本内容, process是一个回调函数
+                $.getJSON("getTypeaheadData", {'type': 'customer', 'keyword': query}, function (data) {
+                    var arr = [];
+                    for (let i = 0; i < data.length; i++) {
+                        customer_name2id[data[i].customer_name] = data[i].customer_id;
+                        arr.push(data[i].customer_name)
+                    }
+                    process(arr);
+                });
+            },
+            afterSelect: function (item) {       //选择项之后的事件，item是当前选中的选项
+                //$("#hidden").val(objects[item]); //为隐藏输入框赋值
+                //console.log(item, customer_name2id[item])
+                //var val = $("#order_add_customer").typeahead("getActive");//获取该值
+                //console.log(val);
+            },
         });
-         */
+        $("#order_add_qtype").typeahead({
+            //source: dataSource, // 数据源
+            items: 5,//最多显示个数，非必须
+            updater: function (item) {//非必须
+                return item;//这里一定要return，否则选中不显示，外加调用display的时候null reference错误。
+            },
+            displayText: function (item) {
+                //return "选：" + item;//返回字符串,非必须
+                return item;//返回字符串,非必须
+            },
+            delay: 300,//延迟时间，非必须
+            source: function (query, process) { //query是输入框输入的文本内容, process是一个回调函数
+                $.getJSON("getTypeaheadData", {'type': 'question', 'keyword': query}, function (data) {
+                    var arr = [];
+                    for (let i = 0; i < data.length; i++) {
+                        question_type2id[data[i].question_type] = data[i].question_id;
+                        arr.push(data[i].question_type)
+                    }
+                    process(arr);
+                });
+            },
+            afterSelect: function (item) {       //选择项之后的事件，item是当前选中的选项
+                //$("#hidden").val(objects[item]); //为隐藏输入框赋值
+                //console.log(item, question_type2id[item])
+                //var val = $("#order_add_customer").typeahead("getActive");//获取该值
+                //console.log(val);
+            },
+        });
+        $("#order_add_operator").typeahead({
+            //source: dataSource, // 数据源
+            items: 5,//最多显示个数，非必须
+            updater: function (item) {//非必须
+                return item;//这里一定要return，否则选中不显示，外加调用display的时候null reference错误。
+            },
+            displayText: function (item) {
+                //return "选：" + item;//返回字符串,非必须
+                return item;//返回字符串,非必须
+            },
+            delay: 300,//延迟时间，非必须
+            source: function (query, process) { //query是输入框输入的文本内容, process是一个回调函数
+                $.getJSON("getTypeaheadData", {'type': 'operator', 'keyword': query}, function (data) {
+                    var arr = [];
+                    for (let i = 0; i < data.length; i++) {
+                        operator_name2id[data[i].operator_name] = data[i].operator_id;
+                        arr.push(data[i].operator_name)
+                    }
+                    process(arr);
+                });
+            },
+            afterSelect: function (item) {       //选择项之后的事件，item是当前选中的选项
+                //$("#hidden").val(objects[item]); //为隐藏输入框赋值
+                //console.log(item, operator_name2id[item])
+                //var val = $("#order_add_customer").typeahead("getActive");//获取该值
+                //console.log(val);
+            },
+        });
     })
     $('#btn_search').click(function () {
         $table_order.bootstrapTable('refresh');
@@ -295,40 +383,10 @@
         $("#date_end").val(moment().format('YYYY-MM-DD'))
     }
 
-    var customer_name2id = {};
-    $(document).ready(function () {
-        var dataSource = ['军工', '高校', '煤化工', '新能源', '节能环保', 'AB股', 'AH股', 'HS300'];
-        $("#order_add_customer").typeahead({
-            //source: dataSource, // 数据源
-            items: 5,//最多显示个数，非必须
-            updater: function (item) {//非必须
-                return item;//这里一定要return，否则选中不显示，外加调用display的时候null reference错误。
-            },
-            displayText: function (item) {
-                //return "选：" + item;//返回字符串,非必须
-                return item;//返回字符串,非必须
-            },
-            delay: 300,//延迟时间，非必须
-            source: function (query, process) { //query是输入框输入的文本内容, process是一个回调函数
-                $.getJSON("getTypeaheadData", {'keyword': query}, function (data) {
-                    var arr = [];
-                    for (let i = 0; i < data.length; i++) {
-                        customer_name2id[data[i].customer_name] = data[i].customer_id;
-                        arr.push(data[i].customer_name)
-                    }
-                    process(arr);
-                });
-            },
-            afterSelect: function (item) {       //选择项之后的事件，item是当前选中的选项
-                //$("#hidden").val(objects[item]); //为隐藏输入框赋值
-                console.log(item,customer_name2id[item])
-                //var val = $("#order_add_customer").typeahead("getActive");//获取该值
-                //console.log(val);
-            },
-        });
-    });
+
 </script>
 {#日期控件初始化#}
 <script type="text/javascript" src="/static/base/js/main.min.js"></script>
 </body>
+
 </html>
