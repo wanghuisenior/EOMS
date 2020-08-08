@@ -39,9 +39,10 @@ def operator_add(request):
 		"operator_name": operator_name}
 	try:
 		models.Operator.objects.create(**dic)
+		return HttpResponse(json.dumps(200))
 	except Exception as e:
 		print(e)
-	return HttpResponse(json.dumps(200))
+		return HttpResponse(json.dumps(500))
 
 
 def operator_del(request):

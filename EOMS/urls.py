@@ -16,7 +16,7 @@ Including another URLconf
 # from django.contrib import admin
 from django.urls import path
 
-from oms import views, order_views, question_views, customer_views, operator_views
+from oms import views, order_views, question_views, customer_views, operator_views, user_views
 
 urlpatterns = [
 	#    path('admin/', admin.site.urls),
@@ -50,4 +50,7 @@ urlpatterns = [
 	path('operator_list', operator_views.operator_list),
 	path('operator_add', operator_views.operator_add),
 	path('operator_del', operator_views.operator_del),
+	# 个人信息
+	path('profile', user_views.profile),
+	path('edit_pwd', user_views.edit_pwd),
 ]

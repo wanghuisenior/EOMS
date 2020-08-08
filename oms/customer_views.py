@@ -37,9 +37,10 @@ def customer_add(request):
 		"customer_name": customer_name}
 	try:
 		models.Customer.objects.create(**dic)
+		return HttpResponse(json.dumps(200))
 	except Exception as e:
 		print(e)
-	return HttpResponse(json.dumps(200))
+		return HttpResponse(json.dumps(500))
 
 
 def customer_del(request):

@@ -257,6 +257,7 @@
                 var cname = $("#order_add_customer").typeahead("getActive");//获取该值
                 var oname = $("#order_add_operator").typeahead("getActive");//获取该值
                 var qtype = $("#order_add_qtype").typeahead("getActive");//获取该值
+                console.log(cname, oname, qtype)
                 $.post('order_add', {
                     'question_id': question_type2id[qtype],
                     'description': $('#order_add_qdesc').val(),

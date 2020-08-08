@@ -113,13 +113,60 @@
     });
 
     $('#btn_add_operator').click(function () {
-        //新建工单
-        var totalRows = $table_operator.bootstrapTable('getOptions')['totalRows'] + 1;
-        $.post('operator_add', {
-            'operator_name': '维修工'+totalRows,
-        }, function (res) {
-            $table_operator.bootstrapTable('refresh');
+        var index = layer.open({
+            //type: 1,//Page层类型
+            area: [$(window).width() * 0.4 + 'px', $(window).height() * 0.7 + 'px'],
+            title: '添加维修工',
+            //shade: 0,//遮罩透明度
+            //fixed: false,    //取消固定定位，因为固定定位是相对body的
+            //offset: [h],
+            //maxmin: true, //允许全屏最小化
+            //anim: -1,//0-6的动画形式，-1不开启
+            content: '<div class="col-md-12" id="panel">\n' +
+                '    <div class="card">\n' +
+                '        <div class="card-body">\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">维修工</span>\n' +
+                '                <input type="text" class="form-control" id="operator_name" \n' +
+                '                       autocomplete="off" placeholder="请输入维修工名" aria-label="">\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">XXXX</span>\n' +
+                '                <input type="text" class="form-control" id="order_add_qtype" data-provide="typeahead"\n' +
+                '                       autocomplete="off" placeholder="XXXX" aria-label="">\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">XXXX</span>\n' +
+                '                <textarea class="form-control" id="order_add_qdesc" name="input_question_desc" rows="2"\n' +
+                '                          placeholder="XXXX.." aria-label=""></textarea>\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">XXXX</span>\n' +
+                '                <input type="text" class="form-control" id="order_add_operator" data-provide="typeahead"\n' +
+                '                       autocomplete="off" placeholder="XXXX" aria-label="">\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</div>\n',
+            yes: function (index, layero) {
+                var cname = $('#operator_name').val()
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.msg('请稍等...', {icon: 16});
+                if (cname) {
+                    $.post('operator_add', {
+                        'operator_name': cname,
+                    }, function (res) {
+                        layer.closeAll();
+                        if (res == 200) {
+                            layer.msg('成功!', {icon: 6, time: 600});
+                            $table_operator.bootstrapTable('refresh');
+                        } else layer.msg('失败!请确认参数是否有误', {icon: 5});
+                    });
+                } else layer.msg('请输入维修工名', {icon: 5});
+
+            }
         });
+
     })
 </script>
 </body>
