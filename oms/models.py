@@ -40,7 +40,7 @@ class Question(models.Model):
 	"""
 	question_id = models.AutoField(primary_key=True)
 	question_type = models.CharField(max_length=200)
-	question_name = models.CharField(max_length=500)
+	# question_name = models.CharField(max_length=500)
 	objects = models.Manager()
 
 

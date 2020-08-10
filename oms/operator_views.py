@@ -29,7 +29,7 @@ def operator_list(request):
 			'operator_id': o.operator_id,
 			'operator_name': o.operator_name,
 		})
-	print(data)
+	# print(data)
 	return HttpResponse(json.dumps(data, cls=LazyEncoder))
 
 

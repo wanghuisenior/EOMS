@@ -51,19 +51,24 @@ def order_list(request):
 
 
 def order_add(request):
+	customer_name = request.POST.get('customer_name', None)
+	question_type = request.POST.get('question_type', None)
 	description = request.POST.get('description', '')
-	question_id = request.POST.get('question_id', None)
-	customer_id = request.POST.get('customer_id', None)
-	operator_id = request.POST.get('operator_id', None)
+	operator_name = request.POST.get('operator_name', None)
+	# print('customer_name', customer_name, 'question_type', question_type, 'description', description, 'operator_name',
+	# 	  operator_name)
+	cus, cus_created = models.Customer.objects.get_or_create(customer_name=customer_name)
+	op, op_created = models.Operator.objects.get_or_create(operator_name=operator_name)
+	q, q_created = models.Question.objects.get_or_create(question_type=question_type)
 	try:
 		dic = {
 			"description": description,
-			"customer_id": int(customer_id),  # 直接指定  外键值了，这里要加 _id
-			"operator_id": int(operator_id),
+			"customer_id": cus.customer_id,  # 直接指定  外键值了，这里要加 _id
+			"operator_id": op.operator_id,
 			# "question": int(question_type),#多对多关系不能create，必须用add
 		}
 		order = models.Order.objects.create(**dic)
-		order.question.add(models.Question.objects.get(question_id=int(question_id)))
+		order.question.add(q)
 		order.save()
 		return HttpResponse(json.dumps(200))
 	except Exception as e:

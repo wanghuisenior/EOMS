@@ -27,9 +27,8 @@ def question_list(request):
 		data.append({
 			'question_id': q.question_id,
 			'question_type': q.question_type,
-			'question_name': q.question_name,
+			# 'question_name': q.question_name,
 		})
-	print(data)
 	return HttpResponse(json.dumps(data, cls=LazyEncoder))
 
 

@@ -258,11 +258,21 @@
                 var oname = $("#order_add_operator").typeahead("getActive");//获取该值
                 var qtype = $("#order_add_qtype").typeahead("getActive");//获取该值
                 console.log(cname, oname, qtype)
+                if (!cname) {
+                    cname = $('#order_add_customer').val();
+                }
+                if (!oname) {
+                    oname = $('#order_add_operator').val();
+                }
+                if (!qtype) {
+                    qtype = $('#order_add_qtype').val();
+                }
+                console.log('cname', cname, 'oname', oname, 'qtype', qtype)
                 $.post('order_add', {
-                    'question_id': question_type2id[qtype],
+                    'customer_name': cname,
+                    'question_type': qtype,
                     'description': $('#order_add_qdesc').val(),
-                    'customer_id': customer_name2id[cname],
-                    'operator_id': operator_name2id[oname],
+                    'operator_name': oname,
                 }, function (res) {
                     layer.closeAll();
                     if (res == 200) {
