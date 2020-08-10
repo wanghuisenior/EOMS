@@ -42,6 +42,7 @@ def order_list(request):
 			'description': o.description,
 			'customer_name': o.customer.customer_name,
 			'operator_name': o.operator.operator_name,
+			'question_type': o.question.question_type,
 			'create_time': o.create_time,
 			'update_time': o.update_time,
 			# 'status': o.get_status_display(),
@@ -64,15 +65,7 @@ def order_add(request):
 	op, op_created = models.Operator.objects.get_or_create(operator_name=operator_name)
 	q, q_created = models.Question.objects.get_or_create(question_type=question_type)
 	try:
-		dic = {
-			"description": description,
-			"customer_id": cus.customer_id,  # 直接指定  外键值了，这里要加 _id
-			"operator_id": op.operator_id,
-			# "question": int(question_type),#多对多关系不能create，必须用add
-		}
-		order = models.Order.objects.create(**dic)
-		order.question.add(q)
-		order.save()
+		models.Order.objects.create(customer=cus, operator=op, question=q, description=description)
 		return HttpResponse(json.dumps(200))
 	except Exception as e:
 		print(e)
