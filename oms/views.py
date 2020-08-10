@@ -52,3 +52,9 @@ def get_home_data(request):
 		if date2str(order_create_date) in ret['seven_day'].keys():
 			ret['seven_day'][date2str(order_create_date)] += 1
 	return HttpResponse(json.dumps(ret, cls=LazyEncoder))
+
+
+# 404处理，系统自带函数, 500等错误都使用这种方式
+def page_not_found(request, exception, template_name='404.html'):
+	print('views.page_not_found')
+	return render(request, template_name)

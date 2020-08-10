@@ -189,7 +189,7 @@
                             $.getJSON('order_del', {'order_id': row.order_id}, function (res) {
                                 if (res == '200') {
                                     layer.msg('删除成功', {icon: 1});
-                                    //$table_order.bootstrapTable('refresh');
+                                    $table_order.bootstrapTable('refresh');
                                 } else layer.msg('删除失败', {icon: 2});
                             })
                         });

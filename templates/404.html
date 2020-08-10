@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>首页 - EOMS后台管理系统</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/ico">
+    <meta name="keywords" content="OMS,后台管理系统">
+    <meta name="description" content="基于Bootstrap v3.3.7的后台管理系统">
+    <link href="/static/base/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/base/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="/static/base/css/style.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fff;
+        }
+
+        .error-page {
+            height: 100%;
+            position: fixed;
+            width: 100%;
+        }
+
+        .error-body {
+            padding-top: 5%;
+        }
+
+        .error-body h1 {
+            font-size: 210px;
+            font-weight: 700;
+            text-shadow: 4px 4px 0 #f5f6fa, 6px 6px 0 #33cabb;
+            line-height: 210px;
+            color: #33cabb;
+        }
+
+        .error-body h4 {
+            margin: 30px 0px;
+        }
+    </style>
+</head>
+
+<body>
+<section class="error-page">
+    <div class="error-box">
+        <div class="error-body text-center">
+            <h1>404</h1>
+            <h4>很抱歉，但是那个页面看起来已经不存在了。</h4>
+            <a href="{{ 'index' }}" class="btn btn-primary ">返回首页</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

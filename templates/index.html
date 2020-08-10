@@ -45,7 +45,7 @@
                             <a href="javascript:void(0)"><i class="mdi mdi-settings-box"></i>
                                 <span>系统管理</span></a>
                             <ul class="nav nav-subnav">
-                                <li><a class="multitabs" href="{{ 'question_view' }}">故障管理</a></li>
+                                <li><a class="multitabs" href="{{ 'question_view' }}">故障类别</a></li>
                                 <li><a class="multitabs" href="{{ 'customer_view' }}">客户管理</a></li>
                                 <li><a class="multitabs" href="{{ 'operator_view' }}">维修工</a></li>
                                 <li><a class="multitabs" href="{{ 'knowledge_view' }}">知识库</a></li>
@@ -55,8 +55,8 @@
                             <a href="javascript:void(0)"><i class="mdi mdi-file-document"></i>
                                 <span>文章管理</span></a>
                             <ul class="nav nav-subnav">
-                                <li><a class="multitabs" href="lyear_forms_radio.html">文章列表</a></li>
-                                <li><a class="multitabs" href="lyear_forms_elements.html">添加文章</a></li>
+                                <li><a class="multitabs" href="{{ 'article_view' }}">文章列表</a></li>
+                                <li><a class="multitabs" href="{{ 'article_add' }}">添加文章</a></li>
                             </ul>
                         </li>
                         <li class="nav-item nav-item-has-subnav">
@@ -96,8 +96,8 @@
                         <li class="dropdown dropdown-profile">
                             <a href="javascript:void(0)" data-toggle="dropdown">
                                 <img class="img-avatar img-avatar-48 m-r-10" src="/static/base/images/users/avatar.jpg"
-                                     alt="笔下光年"/>
-                                <span>笔下光年 <span class="caret"></span></span>
+                                     alt=""/>
+                                <span>superman <span class="caret"></span></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a class="multitabs" data-url="{{ 'profile' }}"
@@ -105,7 +105,7 @@
                                 <li><a class="multitabs" data-url="{{ 'edit_pwd' }}" href="javascript:void(0)"><i
                                         class="mdi mdi-lock-outline"></i> 修改密码</a></li>
                                 <li class="divider"></li>
-                                <li><a href="lyear_pages_login.html"><i class="mdi mdi-logout-variant"></i> 退出登录</a>
+                                <li><a href="{{ 'user_logout' }}"><i class="mdi mdi-logout-variant"></i> 退出登录</a>
                                 </li>
                             </ul>
                         </li>

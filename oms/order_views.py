@@ -57,6 +57,9 @@ def order_add(request):
 	operator_name = request.POST.get('operator_name', None)
 	# print('customer_name', customer_name, 'question_type', question_type, 'description', description, 'operator_name',
 	# 	  operator_name)
+	if not (customer_name and question_type and operator_name):
+		# 三个都不能为空
+		return HttpResponse(json.dumps(500))
 	cus, cus_created = models.Customer.objects.get_or_create(customer_name=customer_name)
 	op, op_created = models.Operator.objects.get_or_create(operator_name=operator_name)
 	q, q_created = models.Question.objects.get_or_create(question_type=question_type)

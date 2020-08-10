@@ -34,10 +34,11 @@ def question_list(request):
 
 def question_add(request):
 	question_type = request.POST.get('question_type')
-	question_name = request.POST.get('question_name')
+	# question_name = request.POST.get('question_name')
 	dic = {
 		"question_type": question_type,
-		"question_name": question_name}
+		# "question_name": question_name
+	}
 	try:
 		models.Question.objects.create(**dic)
 	except Exception as e:

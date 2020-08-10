@@ -49,7 +49,7 @@
 
         showExport: true,        // 是否显示导出按钮, 导出功能需要导出插件支持(tableexport.min.js)
         exportDataType: "basic", // 导出数据类型, 'basic':当前页, 'all':所有数据, 'selected':选中的数据
-
+        exportTypes: ['excel'],  //导出文件类型
         columns: [
             /**
              {
@@ -121,14 +121,58 @@
     });
 
     $('#btn_add_question').click(function () {
-        //新建工单
-        var totalRows = $table_question.bootstrapTable('getOptions')['totalRows'] + 1;
+        var index = layer.open({
+            //type: 1,//Page层类型
+            area: [$(window).width() * 0.4 + 'px', $(window).height() * 0.7 + 'px'],
+            title: '添加故障类别',
+            //shade: 0,//遮罩透明度
+            //fixed: false,    //取消固定定位，因为固定定位是相对body的
+            //offset: [h],
+            //maxmin: true, //允许全屏最小化
+            //anim: -1,//0-6的动画形式，-1不开启
+            content: '<div class="col-md-12" id="panel">\n' +
+                '    <div class="card">\n' +
+                '        <div class="card-body">\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">故障类别</span>\n' +
+                '                <input type="text" class="form-control" id="question_type" \n' +
+                '                       autocomplete="off" placeholder="请输入..." aria-label="">\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">XXXX</span>\n' +
+                '                <input type="text" class="form-control" id="order_add_qtype" data-provide="typeahead"\n' +
+                '                       autocomplete="off" placeholder="XXXX" aria-label="">\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">XXXX</span>\n' +
+                '                <textarea class="form-control" id="order_add_qdesc" name="input_question_desc" rows="2"\n' +
+                '                          placeholder="XXXX.." aria-label=""></textarea>\n' +
+                '            </div>\n' +
+                '            <div class="input-group m-b-10">\n' +
+                '                <span class="input-group-addon">XXXX</span>\n' +
+                '                <input type="text" class="form-control" id="order_add_operator" data-provide="typeahead"\n' +
+                '                       autocomplete="off" placeholder="XXXX" aria-label="">\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</div>\n',
+            yes: function (index, layero) {
+                var qtype = $('#question_type').val()
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.msg('请稍等...', {icon: 16});
+                if (qtype) {
+                    $.post('question_add', {
+                        'question_type': qtype,
+                    }, function (res) {
+                        layer.closeAll();
+                        if (res == 200) {
+                            layer.msg('成功!', {icon: 6, time: 600});
+                            $table_question.bootstrapTable('refresh');
+                        } else layer.msg('失败!请确认参数是否有误', {icon: 5});
+                    });
+                } else layer.msg('请输入...', {icon: 5});
 
-        $.post('question_add', {
-            'question_type': '类别',
-            'question_name': '问题好多啊'+totalRows,
-        }, function (res) {
-            $table_question.bootstrapTable('refresh');
+            }
         });
     })
 </script>

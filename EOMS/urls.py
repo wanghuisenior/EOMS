@@ -14,9 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 # from django.contrib import admin
+from django.conf import settings
+from django.conf.urls import url, static
 from django.urls import path
 
-from oms import views, order_views, question_views, customer_views, operator_views, user_views
+from oms import views, order_views, question_views, customer_views, operator_views, user_views, article_views
 
 urlpatterns = [
 	#    path('admin/', admin.site.urls),
@@ -50,7 +52,14 @@ urlpatterns = [
 	path('operator_list', operator_views.operator_list),
 	path('operator_add', operator_views.operator_add),
 	path('operator_del', operator_views.operator_del),
+	# 文章管理
+	# path('article_view', article_views.article_view),
 	# 个人信息
 	path('profile', user_views.profile),
 	path('edit_pwd', user_views.edit_pwd),
+	#
+	# 增加以下一行，解决关闭debug模式后无法识别静态资源
+	url(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static')
 ]
+# 4040处理
+handler404 = "oms.views.page_not_found"
